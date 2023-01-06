@@ -1,1 +1,1 @@
-# beginng go source directory
+# beginng Go lang source directory
