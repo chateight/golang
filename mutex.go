@@ -9,8 +9,8 @@ import (
 
 func main() {
 	var mu sync.Mutex
-	var c int = 2
-	var odd = []int{}
+	c := 2
+	odd := []int{}
 	tStart := time.Now()
 	for i := 2; i <= 10000*1000; i++ {
 		go func() {
