@@ -4,7 +4,6 @@ import (
     "sync"
 	"time"
 	"fmt"
-	"math"
 )
 
 func main() {
@@ -17,7 +16,7 @@ func main() {
 			flag := true		// if odd number, stay "true"
 			mu.Lock()
 			defer mu.Unlock()
-			for j :=2; j <= int(math.Sqrt(float64(c))); j++ {
+			for j :=2; j*j <= c ; j++ {
 				if c%j == 0{
 					flag = false
 					break
