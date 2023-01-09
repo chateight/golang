@@ -16,7 +16,7 @@ func main() {
 		go func() {
 			flag := true		// if odd number, stay "true"
 			mu.Lock()
-			defer mu.Unlock()		
+			defer mu.Unlock()
 			for j :=2; j <= int(math.Sqrt(float64(c))); j++ {
 				if c%j == 0{
 					flag = false
