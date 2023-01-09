@@ -14,7 +14,7 @@ func main() {
 	tStart := time.Now()
 	for i := 2; i <= 10000*1000; i++ {
 		go func() {
-			flag := true		// if odd number then true
+			flag := true		// if odd number, stay "true"
 			mu.Lock()
 			defer mu.Unlock()		
 			for j :=2; j <= int(math.Sqrt(float64(c))); j++ {
