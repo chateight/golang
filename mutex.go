@@ -12,7 +12,7 @@ func main() {
 	c := 2
 	var odd = []int{}
 	tStart := time.Now()
-	for i := 2; i <= 1000*10000; i++ {
+	for i := 2; i <= 10000*1000; i++ {
 		go func() {
 			flag := true		// if odd number then true
 			mu.Lock()
