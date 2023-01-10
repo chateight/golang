@@ -7,12 +7,15 @@ import (
 )
 
 func main() {
+	var wg sync.WaitGroup
 	var mu sync.Mutex
 	c := 2
 	odd := []int{}
 	tStart := time.Now()
 	for i := 2; i <= 10000*1000; i++ {
+		wg.Add(1)
 		go func() {
+			defer wg.Done()
 			flag := true		// if odd number, stay "true"
 			mu.Lock()
 			defer mu.Unlock()
@@ -28,8 +31,8 @@ func main() {
 			c++
 		}()
 	}
+	wg.Wait()
 	tStop := time.Now()
-	time.Sleep(time.Second)
 	fmt.Println(len(odd))
 
 	el := tStop.Sub(tStart)
