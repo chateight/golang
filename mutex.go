@@ -37,7 +37,7 @@ func main() {
 			c++
 		}()
 	}
-	for i:= 0; i < maxNumber; i++{
+	for i:= 0; i < maxNumber; i++{				// set odd numbers to the slice
 		setBreak := false
 		select {
 		case p := <- ch:
