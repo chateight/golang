@@ -22,3 +22,7 @@ GC function help memory leak issue
 (applicable to IoT and Robotics)
 
 Gobot can help these functionality in Raspberry PI
+
+(easy to use multi core processor)
+
+Native support for the multi core processor, don't request complicated description to make it multi threads
