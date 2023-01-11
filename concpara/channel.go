@@ -13,7 +13,7 @@ import (
 // in this case, slower than WaitGroup. Channel may be useful when it takes long processing time and less inforamtion size
 //
 func main() {
-	runtime.GOMAXPROCS(8)			// current version of Go automatically set it to default value
+	runtime.GOMAXPROCS(8)			// current version of Go automatically set it to default value(8 in case of M1 mac )
 	maxNumber := 1000*10000
 	var mu sync.Mutex
 	ch := make(chan int)
