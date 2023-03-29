@@ -1,0 +1,18 @@
+extends layout
+
+block content
+
+  h1= title
+
+  p #{date} 
+
+  h2= "今日チェックインしているニンジャ"
+
+  main(class='layout')
+    each name in db
+      div(class='square')
+        div(class='color_text' )
+          h2= name
+
+  script #{update} 
+  
