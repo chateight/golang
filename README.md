@@ -30,3 +30,5 @@ Native support for the multi core processor, don't request complicated descripti
 (easy multi thread synchronization)
 
 there are two alternatives, "WaitGroup" or "channel"
+
+To add mifare card check in application @serial using Node.js
