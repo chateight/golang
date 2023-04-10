@@ -17,7 +17,7 @@ import (
 )
 
 type Person struct { 			// uid, name struct for unmarsharing
-	Uid  string `json:"uid"`
+	Uid  string `json:"uid", gorm:"primaryKey"`
 	Name string `json:"name"`
 }
 
@@ -59,7 +59,7 @@ func readJsonFile(f string) {
 func tableCreate(del bool) {
 	// DataBase table create
 
-	db, err := sql.Open("sqlite3", "./myfare.db")
+	db, err := sql.Open("sqlite3", "/Users/usamiryuuichi/go/src/serial/myfare.db")
 	if err != nil {
 		log.Fatal(err)
 	}
