@@ -149,7 +149,7 @@ label:
 		select {
 		// to send websocket message triggered by the timer
 		// the reason to separate receive and send is ws are running multi thread
-		case <-t.C:
+		case <- t.C:
 			if premsg != msg {
 				premsg = msg
 				err := websocket.Message.Send(ws, msg)
@@ -158,7 +158,7 @@ label:
 					break label
 				}
 			}
-		case msgSerial := <-uidSerial.Notice: // wait for message from serial.go via channel
+		case msgSerial := <- uidSerial.Notice: // wait for message from serial.go via channel
 			mu.Lock()
 			msg = msgSerial.(string)
 			mu.Unlock()
