@@ -153,7 +153,7 @@ label:
 
 		select {
 			// to send websocket message triggered by the timer
-			// the reason to separate receive and send is running multi thread
+			// the reason to separate receive and send is ws are running multi thread
 		case <- t.C:
 			if premsg != msg {
 				premsg = msg
