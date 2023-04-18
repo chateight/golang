@@ -142,9 +142,9 @@ func SerialMain() {
 rep:
 	portName, err := getPortName()
 	if err != nil {
+		Notice <- "Check the card reader connection"
 		select {
-		case <- time.After(2 * time.Second):
-			Notice <- "Check the card reader connection"
+		case <- time.After(1 * time.Second):
 			goto rep
 		}
 	}
