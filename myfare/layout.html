@@ -12,7 +12,7 @@
   window.onload = function () {
   socket = new WebSocket("ws://mbair.local:8080/ws");
   socket.onopen = function () {
-    append_message("system", "Please touch your card");
+    append_message("system", "Connected");
   };
   socket.onmessage = function (event) {
     append_message("server", event.data);

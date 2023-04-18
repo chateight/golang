@@ -139,11 +139,22 @@ func SerialMain() {
 	tableCreate(false) // arg true drops the table
 
 	// start serial port & wait for data
+rep:
 	portName, err := getPortName()
+	t := time.NewTicker(2 * time.Second)
 	if err != nil {
-		log.Fatal(err)
-		os.Exit(1)
+		//log.Fatal(err)
+		//os.Exit(1)
+
+		select {
+		case <-t.C:
+			Notice <- "Check the card reader connection"
+			goto rep
+		}
 	}
+	t.Stop()
+	Notice <- "Please touch your card"
+
 	mode := &serial.Mode{
 		BaudRate: 115200,
 	}

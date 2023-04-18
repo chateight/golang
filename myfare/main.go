@@ -34,10 +34,8 @@ var ninjyaPresentaionSlice []string // presentation ninjyas slice
 
 var tableName string // tableNmae = "tbl" + year + day from Jan 1st
 
-var mu sync.RWMutex		// message from card reader
-var msg string			// mutex
-
-var clients = make(map[*websocket.Conn]bool) 
+var mu sync.RWMutex // message from card reader
+var msg string      // mutex
 
 // implements TableName of the Tabler interface
 func (Ninjya) TableName() string {
@@ -136,25 +134,22 @@ func wevServer() {
 func msgHandler(ws *websocket.Conn) {
 	defer ws.Close()
 
-	clients[ws] = true
-	fmt.Println(clients)
-
-	premsg := msg	// initialize websocket message
+	premsg := msg // initialize websocket message
 	t := time.NewTicker(500 * time.Millisecond)
-	defer 	t.Stop()
+	defer t.Stop()
 label:
 	for {
 		msgr := ""
-        err := websocket.Message.Receive(ws, &msgr)
+		err := websocket.Message.Receive(ws, &msgr)
 		if err != nil {
 			//log.Println("receive error")		// main pupose is to check timeout (to detect unused session)
 			break label
 		}
 
 		select {
-			// to send websocket message triggered by the timer
-			// the reason to separate receive and send is ws are running multi thread
-		case <- t.C:
+		// to send websocket message triggered by the timer
+		// the reason to separate receive and send is ws are running multi thread
+		case <-t.C:
 			if premsg != msg {
 				premsg = msg
 				err := websocket.Message.Send(ws, msg)
@@ -163,13 +158,12 @@ label:
 					break label
 				}
 			}
-		case name := <- uidSerial.Notice:	// wait for message from serial.go via channel
+		case msgSerial := <-uidSerial.Notice: // wait for message from serial.go via channel
 			mu.Lock()
-			msg = name.(string)
+			msg = msgSerial.(string)
 			mu.Unlock()
 		}
 	}
-	clients[ws] = false
 }
 
 func main() {
