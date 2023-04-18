@@ -12,7 +12,7 @@
   window.onload = function () {
   socket = new WebSocket("ws://mbair.local:8080/ws");
   socket.onopen = function () {
-    append_message("system", "Connected");
+    append_message("system", "Socket Connected");
   };
   socket.onmessage = function (event) {
     append_message("server", event.data);
