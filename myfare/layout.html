@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <title>attendance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./resources/style.css">
+
+    <script type="text/javascript">
+      var socket = null;
+
+  window.onload = function () {
+  socket = new WebSocket("ws://mbair.local:8080/ws");
+  socket.onopen = function () {
+    append_message("system", "Please touch your card");
+  };
+  socket.onmessage = function (event) {
+    append_message("server", event.data);
+  };
+
+  const send = function (){
+    socket.send("")
+  }
+  setInterval(send, 500);
+
+};
+
+function append_message(name, message) {
+
+  let li_message = document.createElement("li");
+  li_message.textContent = message;
+
+  let ul = document.getElementById("messages");
+  ul.appendChild(li_message);
+
+}
+
+</script>
+
+  </head>
+  <body>
+    {{ template "main" . }}
+    <p>&lt;message area&gt;</p>
+    <ul id="messages"></ul>
+  </body>
+</html>
