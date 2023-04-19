@@ -32,3 +32,13 @@ Native support for the multi core processor, don't request complicated descripti
 there are two alternatives, "WaitGroup" or "channel"
 
 To add mifare card check in application @serial using Node.js
+
+(directries)
+
+concpara:pararell processing
+
+myfare:myfare card application folder
+
+serial:read myfare card info and display it using Node.js(now it was updated to myfare folder golang app)
+
+webserver:very primitive webserver function
