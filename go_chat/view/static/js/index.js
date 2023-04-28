@@ -5,7 +5,7 @@ let chat = document.getElementById("chat");
 
 const text = document.getElementById("text");
 
-setTimeout(scrollToEnd(), 100);
+setTimeout(scrollToEnd(), 3000);
 
 ws.onmessage = function (msg) {
   let obj = JSON.parse(msg.data);

@@ -36,13 +36,12 @@ func DbCreate(){
 	db.AutoMigrate(&Message{})
 }
 
-func DbRead() []Message{
+func DbRead(){
 	db, err := gorm.Open(sqlite.Open("./chat.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 	db.Find(&Messages)
-	return Messages
 }
 
 func DbInsert(name string, msg string){
