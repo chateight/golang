@@ -5,6 +5,8 @@ let chat = document.getElementById("chat");
 
 const text = document.getElementById("text");
 
+setTimeout(scrollToEnd(), 100);
+
 ws.onmessage = function (msg) {
   let obj = JSON.parse(msg.data);
   obj.message = escape_html(obj.message);
