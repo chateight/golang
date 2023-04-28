@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>chat</title>
+    <link rel="stylesheet" href="/static/css/common.css">
+  </head>
+
+  <body>
+
+    <div class="line">
+      <div id="room" class="line-header">Please enter your name to join</div>
+      <div id="chat" class="line-container"></div>
+      <div class="line-form">
+
+        <input placeholder="user name" id="user" type="text">
+        <button id="join" class="line-form-button" onclick="send_data()">Join</button>
+      </div>
+    </div>
+
+    <script>
+
+      const join = document.getElementById("join");
+      const user = document.getElementById("user");
+
+      join.onclick = function () {
+        if (user.value == "") {
+          alert("なまえ(user name)を入れないとすすめません");
+          return;
+        }
+				localStorage.setItem("user",user.value)
+        window.location = "/room/dojo:?name=" + user.value;
+      };
+
+    </script>
+  </body>
+</html>
