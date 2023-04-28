@@ -37,7 +37,6 @@ func Run() {
 		/*
 			c.HTML(http.StatusOK, "room.html", gin.H{
 				"Name": c.Param("name"),
-				"Pmsg": pmsg,
 			})
 		*/
 	})
