@@ -30,12 +30,6 @@ func Run() {
 		c.HTML(http.StatusOK, "index.html", gin.H{})
 	})
 
-	r.GET("/test", func(c *gin.Context) {
-		chattername := c.Query("name")
-		str := chatbuild(chattername)
-		c.Writer.WriteString(str)
-	})
-
 	r.GET("/room/:name", func(c *gin.Context) {
 		chattername := c.Query("name")
 		pmsg := chatbuild(chattername)
