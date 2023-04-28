@@ -37,8 +37,10 @@ To add mifare card check in application @serial using Node.js
 
 concpara:pararell processing
 
-myfare:myfare card application folder
+myfare: myfare card application folder
 
-serial:read myfare card info and display it using Node.js(now it was updated to myfare folder golang app)
+serial: read myfare card info and display it using Node.js(now it was updated to myfare folder golang app)
 
-webserver:very primitive webserver function
+webserver: very primitive webserver function
+
+go_chat: simple chat app using gin/melody/sqlite3
