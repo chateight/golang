@@ -9,7 +9,6 @@ var init = setTimeout(scrollToEnd());
 
 ws.onmessage = function (msg) {
   let obj = JSON.parse(msg.data);
-  obj.message = escape_html(obj.message);
   let line ="";
   if (obj.name==namechat){
     line =`<div class='line-right'>
