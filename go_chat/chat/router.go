@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"encoding/json"
+	"html"
 
 	"github.com/gin-gonic/gin"
 	melody "gopkg.in/olahol/melody.v1" // minimalist websocket framework
@@ -47,7 +48,7 @@ func Run() {
 
 	m.HandleMessage(func(s *melody.Session, msg []byte) {
 		json.Unmarshal(msg, &Chatmsg)
-		sql_db.DbInsert(Chatmsg.Name, Chatmsg.Message)
+		sql_db.DbInsert(Chatmsg.Name, html.EscapeString(Chatmsg.Message))
 		m.BroadcastFilter(msg, func(q *melody.Session) bool {
 			return q.Request.URL.Path == s.Request.URL.Path
 		})
