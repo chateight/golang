@@ -45,7 +45,8 @@ text.onkeydown = function (e) {
 
 function send_data(){
     if (text.value == "")return;
-    text.value = escape_html(text.value);
+    //text.value = escape_html(text.value);
+    console.log(text.value)
     let sendData = `{"name":"${namechat}","message":"${text.value}"}`;
     ws.send(sendData);
     text.value = "";
