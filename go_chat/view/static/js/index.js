@@ -9,7 +9,6 @@ var init = setTimeout(scrollToEnd());
 
 ws.onmessage = function (msg) {
   let obj = JSON.parse(msg.data);
-  obj.message = escape_html(obj.message);
   let line ="";
   if (obj.name==namechat){
     line =`<div class='line-right'>
@@ -45,8 +44,6 @@ text.onkeydown = function (e) {
 
 function send_data(){
     if (text.value == "")return;
-    //text.value = escape_html(text.value);
-    console.log(text.value)
     let sendData = `{"name":"${namechat}","message":"${text.value}"}`;
     ws.send(sendData);
     text.value = "";
@@ -58,22 +55,6 @@ function now() {
     let hour = (date.getHours()<10)?`0${date.getHours()}`:date.getHours();
     return `${hour}:${min}`
 };
-
-function escape_html (string) {
-    if(typeof string !== 'string') {
-      return string;
-    }
-    return string.replace(/[&'`"<>]/g, function(match) {
-      return {
-        '&': '&amp;',
-        "'": '&#x27;',
-        '`': '&#x60;',
-        '"': '&quot;',
-        '<': '&lt;',
-        '>': '&gt;',
-      }[match]
-    });
-}
 
 function scrollToEnd() {
   const messagesArea = document.getElementById("chat");
