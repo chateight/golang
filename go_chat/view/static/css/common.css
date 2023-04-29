@@ -3,6 +3,11 @@
     padding: 0px;
 }
 
+.top-text{
+    padding-left: 10px;
+    padding-top: 7px
+}
+
 .line-header{
     top:0;
     left: 0;
@@ -14,6 +19,7 @@
     text-align: center;
     vertical-align: middle;
 }
+
 .line-container{
     background-color:#49F;
     height: calc(100% - 100px);
@@ -42,6 +48,7 @@ input{
     border-radius:5px;
     margin:8px 5px;
 }
+
 .line-right{
     position: relative;
     margin-right: 5%;

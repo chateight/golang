@@ -15,6 +15,7 @@ import (
 
 type Message struct {
 	Time string `gorm:"primaryKey"`
+	Icon string
 	Name string
 	Msg  string
 }
@@ -44,13 +45,13 @@ func DbRead(){
 	db.Find(&Messages)
 }
 
-func DbInsert(name string, msg string){
+func DbInsert(icon string, name string, msg string){
 	db, err := gorm.Open(sqlite.Open("./chat.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 
 	now := time.Now().Unix() 
-	db.Create(&Message{Time: strconv.FormatInt(now, 10), Name: name, Msg: msg})
+	db.Create(&Message{Time: strconv.FormatInt(now, 10), Icon: icon, Name: name, Msg: msg})
 
 }

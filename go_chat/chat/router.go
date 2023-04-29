@@ -1,7 +1,7 @@
 package chat
 
 import (
-	//"fmt"
+	"fmt"
 	sql_db "go_chat/sqldb"
 	"net/http"
 	"time"
@@ -14,8 +14,9 @@ import (
 )
 
 var Chatmsg struct {
+	Icon	string `json:"icon"`
 	Name    string `json:"name"`
-	Message string `json:"message`
+	Message string `json:"message"`
 }
 
 func Run() {
@@ -47,7 +48,8 @@ func Run() {
 
 	m.HandleMessage(func(s *melody.Session, msg []byte) {
 		json.Unmarshal(msg, &Chatmsg)
-		sql_db.DbInsert(Chatmsg.Name, Chatmsg.Message)
+		fmt.Println(Chatmsg)
+		sql_db.DbInsert(Chatmsg.Icon, Chatmsg.Name, Chatmsg.Message)
 		m.BroadcastFilter(msg, func(q *melody.Session) bool {
 			return q.Request.URL.Path == s.Request.URL.Path
 		})
@@ -97,7 +99,7 @@ func chatbuild(chatname string) string {
 		if chatname == p.Name{
 			strC += liner(p.Msg, timestiring)
 		}else{
-			strC += linel(p.Name, p.Msg, timestiring)
+			strC += linel(p.Icon, p.Name, p.Msg, timestiring)
 		}
 	}
 	return str1 + strC + str2
@@ -112,9 +114,9 @@ func liner(msg string, time string) string {
 	return lineR
 }
 
-func linel(name string, msg string, time string) string {
+func linel(icon string, name string, msg string, time string) string {
 	lineL := `<div class='line-left'>
-	<img src="/static/img/icon.png"/>
+	<img src="/static/img/` + icon + `.png">
 	<div class='line-left-container'>
 		<p class='line-left-name'>` + name + `</p>
 		<p class='line-left-text'>` + msg + `</p>

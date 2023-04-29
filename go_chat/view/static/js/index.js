@@ -1,6 +1,7 @@
 let url = "ws://" + window.location.host + window.location.pathname + "/ws";
 let ws = new WebSocket(url);
 let namechat = localStorage.getItem("user")
+let iconchat = localStorage.getItem("icon")
 let chat = document.getElementById("chat");
 
 const text = document.getElementById("text");
@@ -16,7 +17,7 @@ ws.onmessage = function (msg) {
             <div class="line-right-time">${now()}</div>
            </div>`
   }else{
-    let image = '<img src="/static/img/icon.png"/>'
+    let image = '<img src="/static/img/'+ iconchat + '.png"/>'
     line =`<div class='line-left'>
                 ${image}
                 <div class='line-left-container'>
@@ -45,7 +46,7 @@ text.onkeydown = function (e) {
 function send_data(){
     if (text.value == "")return;
     text.value = escape_html(text.value);
-    let sendData = `{"name":"${namechat}","message":"${text.value}"}`;
+    let sendData = `{"icon":"${iconchat}","name":"${namechat}","message":"${text.value}"}`;
     ws.send(sendData);
     text.value = "";
 }
