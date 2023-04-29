@@ -1,7 +1,7 @@
 package chat
 
 import (
-	"fmt"
+	//"fmt"
 	sql_db "go_chat/sqldb"
 	"net/http"
 	"time"
@@ -48,7 +48,6 @@ func Run() {
 
 	m.HandleMessage(func(s *melody.Session, msg []byte) {
 		json.Unmarshal(msg, &Chatmsg)
-		fmt.Println(Chatmsg)
 		sql_db.DbInsert(Chatmsg.Icon, Chatmsg.Name, Chatmsg.Message)
 		m.BroadcastFilter(msg, func(q *melody.Session) bool {
 			return q.Request.URL.Path == s.Request.URL.Path
