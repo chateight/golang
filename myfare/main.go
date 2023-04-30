@@ -181,10 +181,11 @@ func main() {
 	// to call card reader function()
 	go uidSerial.SerialMain()
 
-	// data base create and make table to store chat messages
+	// chat data base create and make table to store chat messages
 	sql_db.DbCreate()
 	// start chat service
 	go chat.Run()
+	
 	// start myfare card service
 	wevServer()
 }
