@@ -35,11 +35,17 @@ function append_message(name, message) {
 
 }
 
+const windowFeatures = "left=100,top=100,width=320,height=320";
+      	function OnButtonClick(){
+ 			 window.open('http://rasp-b.local:8082', windowFeatures);
+		};
+
 </script>
 
   </head>
   <body>
     {{ template "main" . }}
+    <input type="button" value="チャットに入る" onclick="OnButtonClick();"/><br />
     <p>&lt;message area&gt;</p>
     <ul id="messages"></ul>
   </body>

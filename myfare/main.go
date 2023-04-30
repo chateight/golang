@@ -1,8 +1,19 @@
+//
+// chat app skelton is from https://www.cetus-media.info/article/2021/line-chat/
+// melody sample https://github.com/olahol/melody/tree/master/examples/multichat
+//
+// the gin & melody are used to create this application
+//
+
+
 package main
 
 import (
 	"fmt"
 	"sync"
+
+	chat "myfare/go_chat/chat"
+	sql_db "myfare/go_chat/sqldb"
 
 	"html/template"
 	"log"
@@ -170,6 +181,10 @@ func main() {
 	// to call card reader function()
 	go uidSerial.SerialMain()
 
-	// http server start
+	// data base create and make table to store chat messages
+	sql_db.DbCreate()
+	// start chat service
+	go chat.Run()
+	// myfare card service start
 	wevServer()
 }
