@@ -25,7 +25,7 @@ func Run() {
 	m := melody.New()
 
 	r.Static("/static", "view/static")
-	r.LoadHTMLGlob("./go_chat/view/*.html")		// directory root is "Run" call module existing directory
+	r.LoadHTMLGlob("./go_chat/view/*.html")		// directory root is "Run" call module(main.go) existing directory
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{})
