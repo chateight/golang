@@ -185,6 +185,6 @@ func main() {
 	sql_db.DbCreate()
 	// start chat service
 	go chat.Run()
-	// myfare card service start
+	// start myfare card service
 	wevServer()
 }
