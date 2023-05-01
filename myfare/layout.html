@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="./resources/style.css">
 
     <script type="text/javascript">
+      let urlws = "ws://" + window.location.host + "/ws";
       var socket = null;
 
   window.onload = function () {
-  socket = new WebSocket("ws://mbair.local:8080/ws");
+  socket = new WebSocket(urlws);
   socket.onopen = function () {
     append_message("system", "Socket Connected");
   };
@@ -34,10 +35,11 @@ function append_message(name, message) {
   ul.appendChild(li_message);
 
 }
+let urlhttp = "http://" + window.location.host;
 
-const windowFeatures = "left=100,top=100,width=320,height=320";
+const windowFeatures = "left=100,top=100,width=500,height=800"; // normally, all browser disable to generate pop up window
       	function OnButtonClick(){
- 			 window.open('http://rasp-b.local:8082', windowFeatures);
+ 			 window.open(urlhttp.replace('8080', '8082'), windowFeatures);
 		};
 
 </script>
