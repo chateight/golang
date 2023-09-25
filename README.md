@@ -44,3 +44,5 @@ serial: read myfare card info and display it using Node.js(now it was updated to
 webserver: very primitive webserver function
 
 go_chat: simple chat app using gin/melody/sqlite3
+
+basic/di: dependency injection sample(original code : <https://free-engineer.life/golang-dependency-injection/>)
