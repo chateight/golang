@@ -1,4 +1,4 @@
-# beginng Go lang source directory
+# golang source directory
 
 there are some advantages using Golang
 
@@ -34,6 +34,8 @@ there are two alternatives, "WaitGroup" or "channel"
 To add mifare card check in application @serial using Node.js
 
 (directries)
+
+image:webserver providing file upload, compression, r/g/b extract and transmit to raspberry pi pico
 
 concpara:pararell processing
 
