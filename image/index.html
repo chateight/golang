@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/style.css" />
+    <title>ファイルアップロード</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>画像ファイルアップロード&転送処理</h1>
+      <label>
+        <form
+          method="post"
+          action="/upload"
+          enctype="multipart/form-data"
+          id="uploadForm"
+        >
+          <input type="file" name="image" multiple="multiple" id="file" />
+          <input type="submit" name="submit" value="アップロード" id="submit" />
+        </form>
+        <div id="uploadResult"></div>
+      </label>
+    </div>
+
+    <script>
+      const form = document.getElementById("uploadForm");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        fetch("/upload", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => {
+            if (!response.ok) {
+              return response.text().then((text) => {
+                throw new Error(text);
+              });
+            }
+            return response.json();
+          })
+          .then((data) => {
+            document.getElementById("uploadResult").innerText = data.message;
+            setTimeout(() => {
+              document.getElementById("uploadResult").innerText = "";
+            }, 3000);
+          })
+          .catch((error) => {
+            document.getElementById("uploadResult").innerText =
+              error.message || "アップロードに失敗しました。";
+            setTimeout(() => {
+              document.getElementById("uploadResult").innerText = "";
+            }, 5000);
+          });
+      });
+    </script>
+  </body>
+</html>
