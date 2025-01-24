@@ -229,16 +229,12 @@ func sendTcpIp() {
 
 	// Prepare the data to send
 	dataLength := uint16(len(fileData))
-	//header := []byte{0xff, 0xff}
 
 	// Create a buffer to hold all the data
 	buffer := new(bytes.Buffer)
 
 	// Write length (2 bytes)
 	binary.Write(buffer, binary.BigEndian, dataLength)
-
-	// Write header (2 bytes)
-	//buffer.Write(header)
 
 	// Write file data
 	buffer.Write(fileData)
