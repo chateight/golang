@@ -5,7 +5,7 @@
 // compile option for Raspberry PI zero
 // $ GOOS=linux GOARCH=arm GOARM=6 go build -o "image_name"
 //
-// using port: WEB server(HTTP/8000), image data sending port(TCP/5000) 
+// using port: WEB server(HTTP/8000), image data sending port(TCP/5000)
 //
 
 package main
@@ -21,6 +21,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode/utf8"
 )
 
 type Response struct {
@@ -95,22 +96,28 @@ func upload(w http.ResponseWriter, r *http.Request) {
 
 // respond to text send button : create text to image & send out to rapberry pi pico
 func uploadText(w http.ResponseWriter, r *http.Request) {
-    if r.Method != "POST" {
-        sendErrorResponse(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
-        return
-    }
+	if r.Method != "POST" {
+		sendErrorResponse(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		return
+	}
 
-    err := r.ParseMultipartForm(10 << 20) // 10 MB limit
-    if err != nil {
-        sendErrorResponse(w, "フォームの解析に失敗しました", http.StatusBadRequest)
-        return
-    }
+	err := r.ParseMultipartForm(10 << 20) // 10 MB limit
+	if err != nil {
+		sendErrorResponse(w, "フォームの解析に失敗しました", http.StatusBadRequest)
+		return
+	}
 
-    text := r.FormValue("text")
-    if text == "" {
-        sendErrorResponse(w, "テキストが空です", http.StatusBadRequest)
-        return
-    }
+	text := r.FormValue("text")
+	if text == "" {
+		sendErrorResponse(w, "テキストが空です", http.StatusBadRequest)
+		return
+	}
+
+	// to check text length
+	if !isValidTextLength(text) {
+		sendErrorResponse(w, "テキストの長さが制限を超えています（半角8文字または全角4文字以内）", http.StatusBadRequest)
+		return
+	}
 
 	// to clear img directory files
 	if err := clearImageDirectory(); err != nil {
@@ -118,15 +125,15 @@ func uploadText(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    _, err = proc.CreateImageFromText(text)
-    if err != nil {
-        sendErrorResponse(w, "テキストからイメージの作成に失敗しました", http.StatusInternalServerError)
-        return
-    }
+	_, err = proc.CreateImageFromText(text)
+	if err != nil {
+		sendErrorResponse(w, "テキストからイメージの作成に失敗しました", http.StatusInternalServerError)
+		return
+	}
 
-    proc.ImgProc()
+	proc.ImgProc()
 
-    sendSuccessResponse(w, "テキストからイメージが作成され、ラズピコに送信されました。")
+	sendSuccessResponse(w, "テキストからイメージが作成され、ラズピコに送信されました。")
 }
 
 // respond document root(index.html)
@@ -172,3 +179,15 @@ func clearImageDirectory() error {
 
 	return nil
 }
+
+func isValidTextLength(text string) bool {
+    runeCount := utf8.RuneCountInString(text)
+    byteCount := len(text)
+
+    // full-width length check <= 4
+    fullWidthCount := (byteCount - runeCount) / 2
+
+    // 
+    return fullWidthCount <= 4 && runeCount <= 8
+}
+

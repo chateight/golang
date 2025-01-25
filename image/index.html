@@ -23,41 +23,81 @@
     </div>
 
     <script>
-      const imageForm = document.getElementById("imageUploadForm");
-      const textForm = document.getElementById("textUploadForm");
-      const resultDiv = document.getElementById("uploadResult");
+      document.addEventListener("DOMContentLoaded", function () {
+        const imageForm = document.getElementById("imageUploadForm");
+        const textForm = document.getElementById("textUploadForm");
+        const resultDiv = document.getElementById("uploadResult");
+        const textInput = document.getElementById("text");
 
-      function handleSubmit(e, url) {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        fetch(url, {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => {
-            if (!response.ok) {
-              return response.text().then((text) => {
-                throw new Error(text);
-              });
+        function isValidTextLength(text) {
+          // 全角文字を2文字、半角文字を1文字としてカウント
+          const count = text.replace(/[^\x01-\x7E]/g, "**").length;
+
+          // 8文字以下であることをチェック
+          return count <= 8;
+        }
+
+        function handleSubmit(e, url) {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+
+          // テキストフォームの場合、文字数チェックを行う
+          if (e.target.id === "textUploadForm") {
+            const text = formData.get("text");
+            if (!isValidTextLength(text)) {
+              resultDiv.innerText =
+                "テキストは半角8文字または全角4文字以内で入力してください。";
+              setTimeout(() => {
+                resultDiv.innerText = "";
+              }, 3000);
+              return;
             }
-            return response.json();
-          })
-          .then((data) => {
-            resultDiv.innerText = data.message;
-            setTimeout(() => {
-              resultDiv.innerText = "";
-            }, 3000);
-          })
-          .catch((error) => {
-            resultDiv.innerText = error.message || "アップロードに失敗しました。";
-            setTimeout(() => {
-              resultDiv.innerText = "";
-            }, 5000);
-          });
-      }
+          }
 
-      imageForm.addEventListener("submit", (e) => handleSubmit(e, "/upload"));
-      textForm.addEventListener("submit", (e) => handleSubmit(e, "/uploadText"));
+          fetch(url, {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => {
+              if (!response.ok) {
+                return response.text().then((text) => {
+                  throw new Error(text);
+                });
+              }
+              return response.json();
+            })
+            .then((data) => {
+              resultDiv.innerText = data.message;
+              setTimeout(() => {
+                resultDiv.innerText = "";
+              }, 3000);
+            })
+            .catch((error) => {
+              resultDiv.innerText =
+                error.message || "アップロードに失敗しました。";
+              setTimeout(() => {
+                resultDiv.innerText = "";
+              }, 5000);
+            });
+        }
+
+        imageForm.addEventListener("submit", (e) => handleSubmit(e, "/upload"));
+        textForm.addEventListener("submit", (e) =>
+          handleSubmit(e, "/uploadText")
+        );
+
+        // リアルタイムでの入力チェック
+        textInput.addEventListener("input", function () {
+          const isValid = isValidTextLength(this.value);
+          this.style.backgroundColor = isValid ? "" : "pink";
+          if (!isValid) {
+            resultDiv.innerText =
+              "テキストは半角8文字または全角4文字以内で入力してください。";
+          } else {
+            resultDiv.innerText = "";
+          }
+        });
+      });
     </script>
   </body>
 </html>
