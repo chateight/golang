@@ -93,6 +93,42 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	sendSuccessResponse(w, "ファイルが正常にラズピコに送信されました。")
 }
 
+// respond to text send button : create text to image & send out to rapberry pi pico
+func uploadText(w http.ResponseWriter, r *http.Request) {
+    if r.Method != "POST" {
+        sendErrorResponse(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+        return
+    }
+
+    err := r.ParseMultipartForm(10 << 20) // 10 MB limit
+    if err != nil {
+        sendErrorResponse(w, "フォームの解析に失敗しました", http.StatusBadRequest)
+        return
+    }
+
+    text := r.FormValue("text")
+    if text == "" {
+        sendErrorResponse(w, "テキストが空です", http.StatusBadRequest)
+        return
+    }
+
+	// to clear img directory files
+	if err := clearImageDirectory(); err != nil {
+		sendErrorResponse(w, "既存の画像ファイルの削除に失敗しました", http.StatusInternalServerError)
+		return
+	}
+
+    _, err = proc.CreateImageFromText(text)
+    if err != nil {
+        sendErrorResponse(w, "テキストからイメージの作成に失敗しました", http.StatusInternalServerError)
+        return
+    }
+
+    proc.ImgProc()
+
+    sendSuccessResponse(w, "テキストからイメージが作成され、ラズピコに送信されました。")
+}
+
 // respond document root(index.html)
 func index(w http.ResponseWriter, r *http.Request) {
 	tmp := template.Must(template.ParseFiles("index.html"))
@@ -107,6 +143,7 @@ func main() {
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/upload", upload)
+	http.HandleFunc("/uploadText", uploadText)
 	http.HandleFunc("/", index)
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }

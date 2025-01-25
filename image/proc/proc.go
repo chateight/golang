@@ -13,6 +13,11 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+	"image/color"
+	//"log"
+	"golang.org/x/image/font"
+	"golang.org/x/image/font/opentype"
+	"golang.org/x/image/math/fixed"
 
 	_ "image/jpeg"
 )
@@ -268,4 +273,79 @@ func sendTcpIp() {
 	}
 
 	fmt.Printf("Received response: %s\n", string(respBuffer[:n]))
+}
+
+func CreateImageFromText(text string) (string, error) {
+    width, height := 400, 200
+
+    img := image.NewRGBA(image.Rect(0, 0, width, height))
+
+    // 背景を黒にします
+    for y := 0; y < height; y++ {
+        for x := 0; x < width; x++ {
+            img.Set(x, y, color.Black)
+        }
+    }
+
+    fontPath := "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc"
+    fontBytes, err := os.ReadFile(fontPath)
+    if err != nil {
+        return "", fmt.Errorf("フォントファイルの読み込みに失敗しました: %v", err)
+    }
+
+    fontCollection, err := opentype.ParseCollection(fontBytes)
+    if err != nil {
+        return "", fmt.Errorf("フォントコレクションのパースに失敗しました: %v", err)
+    }
+
+    f, err := fontCollection.Font(0)
+    if err != nil {
+        return "", fmt.Errorf("フォントの取得に失敗しました: %v", err)
+    }
+
+    fontSize := 30.0*3 // フォントサイズを調整
+    face, err := opentype.NewFace(f, &opentype.FaceOptions{
+        Size: fontSize,
+        DPI:  72,
+    })
+    if err != nil {
+        return "", fmt.Errorf("フォントフェイスの作成に失敗しました: %v", err)
+    }
+
+    textColor := color.White
+
+    // テキストの幅と高さを計算
+    bounds, _ := font.BoundString(face, text)
+    textWidth := float64(bounds.Max.X - bounds.Min.X) / 64
+    textHeight := float64(bounds.Max.Y - bounds.Min.Y) / 64
+
+    // 描画位置を計算（中央揃え）
+    x := (float64(width) - textWidth) / 2
+    y := (float64(height) + textHeight) / 2
+
+    d := &font.Drawer{
+        Dst:  img,
+        Src:  image.NewUniform(textColor),
+        Face: face,
+        Dot:  fixed.Point26_6{
+            X: fixed.Int26_6(x * 64),
+            Y: fixed.Int26_6(y * 64),
+        },
+    }
+    d.DrawString(text)
+
+    // 画像を保存
+    imagePath := filepath.Join("img", "uImage.png")
+    outputFile, err := os.Create(imagePath)
+    if err != nil {
+        return "", fmt.Errorf("出力ファイルの作成に失敗しました: %v", err)
+    }
+    defer outputFile.Close()
+
+    err = png.Encode(outputFile, img)
+    if err != nil {
+        return "", fmt.Errorf("画像のエンコードに失敗しました: %v", err)
+    }
+
+    return imagePath, nil
 }

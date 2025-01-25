@@ -3,32 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/static/style.css" />
-    <title>ファイルアップロード</title>
+    <link rel="stylesheet" href="./static/style.css" />
+    <title>ファイル&テキストアップロード</title>
   </head>
   <body>
     <div class="container">
-      <h1>画像ファイルアップロード&転送処理</h1>
-      <label>
-        <form
-          method="post"
-          action="/upload"
-          enctype="multipart/form-data"
-          id="uploadForm"
-        >
-          <input type="file" name="image" multiple="multiple" id="file" />
-          <input type="submit" name="submit" value="アップロード" id="submit" />
-        </form>
-        <div id="uploadResult"></div>
-      </label>
+      <h1>画像ファイルアップロード&テキスト送信</h1>
+      <form id="imageUploadForm" enctype="multipart/form-data">
+        <label for="file">画像ファイル選択:</label>
+        <input type="file" name="image" multiple="multiple" id="file" />
+        <input type="submit" value="画像アップロード" id="imageSubmit" />
+      </form>
+      <form id="textUploadForm" enctype="multipart/form-data">
+        <label for="text">テキスト入力:</label>
+        <input type="text" name="text" id="text" placeholder="テキストを入力" />
+        <input type="submit" value="テキスト送信" id="textSubmit" />
+      </form>
+      <div id="uploadResult"></div>
     </div>
 
     <script>
-      const form = document.getElementById("uploadForm");
-      form.addEventListener("submit", (e) => {
+      const imageForm = document.getElementById("imageUploadForm");
+      const textForm = document.getElementById("textUploadForm");
+      const resultDiv = document.getElementById("uploadResult");
+
+      function handleSubmit(e, url) {
         e.preventDefault();
-        const formData = new FormData(form);
-        fetch("/upload", {
+        const formData = new FormData(e.target);
+        fetch(url, {
           method: "POST",
           body: formData,
         })
@@ -41,19 +43,21 @@
             return response.json();
           })
           .then((data) => {
-            document.getElementById("uploadResult").innerText = data.message;
+            resultDiv.innerText = data.message;
             setTimeout(() => {
-              document.getElementById("uploadResult").innerText = "";
+              resultDiv.innerText = "";
             }, 3000);
           })
           .catch((error) => {
-            document.getElementById("uploadResult").innerText =
-              error.message || "アップロードに失敗しました。";
+            resultDiv.innerText = error.message || "アップロードに失敗しました。";
             setTimeout(() => {
-              document.getElementById("uploadResult").innerText = "";
+              resultDiv.innerText = "";
             }, 5000);
           });
-      });
+      }
+
+      imageForm.addEventListener("submit", (e) => handleSubmit(e, "/upload"));
+      textForm.addEventListener("submit", (e) => handleSubmit(e, "/uploadText"));
     </script>
   </body>
 </html>
