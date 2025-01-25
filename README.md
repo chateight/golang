@@ -35,9 +35,9 @@ To add mifare card check in application @serial using Node.js
 
 (directries)
 
-image:webserver providing file upload, compression, r/g/b extract and transmit to raspberry pi pico
+image: a webserver providing file/text upload, make image file when text transmission case, image compression, r/g/b extract and transmit to raspberry pi pico
 
-concpara:pararell processing
+concpara: pararell processing
 
 myfare: myfare card application folder(integrate go_chat function @2023/4/30) --> moved to myfare-copy(this one is obsolete)
 
