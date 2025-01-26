@@ -287,7 +287,13 @@ func CreateImageFromText(text string) (string, error) {
         }
     }
 
-    fontPath := "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc"
+	// in raspberry pi case
+	// sudo apt install fonts-noto-cjk
+	// change the locale
+	//
+	fontPath := "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"
+	// in mac case
+    //fontPath := "/System/Library/Fonts/ヒラギノ角ゴシック W3.ttc"
     fontBytes, err := os.ReadFile(fontPath)
     if err != nil {
         return "", fmt.Errorf("フォントファイルの読み込みに失敗しました: %v", err)
