@@ -1,3 +1,6 @@
+// 'func CreateImageFromText() fontPath' should be matched depend on operating OS or machine
+//
+//
 package proc
 
 import (
