@@ -3,7 +3,7 @@
 // changes: to check upload file extension, to respond file save result using ajax, to prepare css for visibility improvement
 //
 // compile option for Raspberry PI zero
-// $ GOOS=linux GOARCH=arm GOARM=6 go build -o "image_name"
+// $ GOOS=linux GOARCH=arm GOARM=6 go build -ldflags="-s -w" -o "image_name"
 //
 // using port: WEB server(HTTP/8000), image data sending port(TCP/5000)
 //
@@ -136,6 +136,95 @@ func uploadText(w http.ResponseWriter, r *http.Request) {
 	sendSuccessResponse(w, "テキストからイメージが作成され、ラズピコに送信されました。")
 }
 
+// CORS対応ラッパー
+/*
+func withCORS(h http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// 開発中は "*"、本番ではオリジンを制限
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		h(w, r)
+	}
+}*/
+
+func withCORS(h http.HandlerFunc) http.HandlerFunc {
+	// 許可したいオリジンのホワイトリスト（複数も可）
+	allowedOrigins := map[string]struct{}{
+		"http://rasp-b.local": {},
+		"http://localhost": {},
+		"http://127.0.0.1": {},
+	}
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		origin := r.Header.Get("Origin")
+		if _, ok := allowedOrigins[origin]; ok {
+			w.Header().Set("Access-Control-Allow-Origin", origin)
+			// キャッシュに影響するのでVaryヘッダーもセット推奨
+			w.Header().Set("Vary", "Origin")
+		}
+
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		// プリフライトリクエストはここで終了
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		h(w, r)
+	}
+}
+
+// JS専用：uploadTextと同等だがCORS対応
+func uploadTextJS(w http.ResponseWriter, r *http.Request) {
+	log.Println("uploadTextJS called", r.Method, r.URL.Path)
+
+	if r.Method != "POST" {
+		sendErrorResponse(w, "許可されていないメソッド", http.StatusMethodNotAllowed)
+		return
+	}
+
+	err := r.ParseMultipartForm(10 << 20)
+	if err != nil {
+		sendErrorResponse(w, "フォームの解析に失敗しました", http.StatusBadRequest)
+		return
+	}
+
+	text := r.FormValue("text")
+	if text == "" {
+		sendErrorResponse(w, "テキストが空です", http.StatusBadRequest)
+		return
+	}
+
+	if !isValidTextLength(text) {
+		sendErrorResponse(w, "テキストの長さが制限を超えています（半角8文字または全角4文字以内）", http.StatusBadRequest)
+		return
+	}
+
+	if err := clearImageDirectory(); err != nil {
+		sendErrorResponse(w, "既存の画像ファイルの削除に失敗しました", http.StatusInternalServerError)
+		return
+	}
+
+	_, err = proc.CreateImageFromText(text)
+	if err != nil {
+		sendErrorResponse(w, "テキストからイメージの作成に失敗しました", http.StatusInternalServerError)
+		return
+	}
+
+	proc.ImgProc()
+
+	sendSuccessResponse(w, "JS経由: テキストからイメージが作成され、ラズピコに送信されました。")
+}
+
 // respond document root(index.html)
 func index(w http.ResponseWriter, r *http.Request) {
 	tmp := template.Must(template.ParseFiles("index.html"))
@@ -151,8 +240,9 @@ func main() {
 
 	http.HandleFunc("/upload", upload)
 	http.HandleFunc("/uploadText", uploadText)
+	http.HandleFunc("/uploadText_js", withCORS(uploadTextJS))
 	http.HandleFunc("/", index)
-	log.Fatal(http.ListenAndServe(":8000", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8000", nil))
 }
 
 // clear the files in the img directory
