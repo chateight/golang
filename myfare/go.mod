@@ -1,12 +1,12 @@
 module myfare
 
-go 1.19
+go 1.25.0
 
 require (
 	github.com/gin-gonic/gin v1.9.0
 	github.com/mattn/go-sqlite3 v1.14.16
 	go.bug.st/serial v1.6.2
-	golang.org/x/net v0.9.0
+	golang.org/x/net v0.54.0
 	gopkg.in/olahol/melody.v1 v1.0.0-20170518105555-d52139073376
 	gorm.io/driver/sqlite v1.5.0
 	gorm.io/gorm v1.25.0
@@ -34,9 +34,9 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.9 // indirect
 	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
-	golang.org/x/crypto v0.5.0 // indirect
-	golang.org/x/sys v0.7.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/crypto v0.52.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/text v0.37.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
