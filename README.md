@@ -39,7 +39,7 @@ image: a webserver providing file/text upload, make image file when text transmi
 
 concpara: pararell processing
 
-myfare: myfare card application folder(integrate go_chat function @2023/4/30) --> moved to myfare-copy(this one is obsolete)
+myfare: myfare card application folder(integrate go_chat function @2023/4/30) --> moved to myfare-copy(this one is obsolete & removed)
 
 serial: read myfare card info and display it using Node.js(now it was updated to myfare folder golang app)
 
